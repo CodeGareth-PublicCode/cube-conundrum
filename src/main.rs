@@ -5,9 +5,11 @@ fn main() {
     let rule_hashmap = generate_rule_hashmap(6,4,2);
     let game_statement = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green";
     let is_game_impossible = validate_if_game_was_impossible(&game_statement, &rule_hashmap);
-
     assert_eq!(is_game_impossible, false);
 
+    // todo:
+    // enumerate through a vector of game statements and validate
+    // track a mut counter variable where if game was not possible, you increment with the enumerate
 
 }
 
