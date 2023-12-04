@@ -59,7 +59,7 @@ mod tests {
     #[test]
     fn compare_game_hashmap_to_rule_hashmap() {
         let game_statement = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green";
-        let max_hashmap: HashMap<String, i16> =
+        let game_max_hashmap: HashMap<String, i16> =
             parse_game_statement_to_max_number_hashmap(&game_statement);
 
         let rule_input = [
@@ -69,16 +69,11 @@ mod tests {
         ];
         let rule_hashmap: HashMap<String, i16> = HashMap::from(rule_input);
 
-        let mut valid_game: bool = true;
+        // is any tuple where top number in game exceeds allowed number for same colour in rules,
+        let invalid_game: bool = rule_hashmap.iter().any(|(rule, max_allowed_value)| {
+            game_max_hashmap.get_key_value(rule).unwrap().1 > max_allowed_value
+        });
 
-        for (rule, max_allowed_value) in rule_hashmap.iter() {
-            if max_hashmap.get_key_value(rule).unwrap().1 > max_allowed_value {
-                valid_game = false;
-                return;
-            } else {
-            }
-
-            assert_eq!(valid_game, false) // game rules state theres 5 blue but game log states 6 blue
-        }
+        assert_eq!(invalid_game, true) // game rules state theres 5 blue but game log states 6 blue
     }
 }
