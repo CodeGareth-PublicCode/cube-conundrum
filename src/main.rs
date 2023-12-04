@@ -17,62 +17,68 @@ pub fn parse_game_statement_to_max_number_hashmap(input: &str) -> HashMap<String
     let mut game_store: Vec<(String, i16)> = Vec::new();
 
     for individual in individual_pulls {
-
         let parsed_info: Vec<&str> = individual.split(" ").collect();
-        game_store.push((String::from(parsed_info.get(1).unwrap().to_owned()), parsed_info.get(0).unwrap().parse().unwrap()))
+        game_store.push((
+            String::from(parsed_info.get(1).unwrap().to_owned()),
+            parsed_info.get(0).unwrap().parse().unwrap(),
+        ))
     }
 
     let mut max_store: HashMap<String, i16> = HashMap::new();
 
     for pull in game_store {
-        max_store.entry(pull.0).and_modify(|element| *element = max(*element, pull.1)).or_insert(pull.1);
+        max_store
+            .entry(pull.0)
+            .and_modify(|element| *element = max(*element, pull.1))
+            .or_insert(pull.1);
     }
 
     max_store
-
 }
-
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::collections::{HashMap};
+    use std::collections::HashMap;
 
     #[test]
     fn parse_statement_to_max_hashmap() {
-
         let game_statement = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green";
         let max_hashmap = parse_game_statement_to_max_number_hashmap(&game_statement);
 
-        assert_eq!(HashMap::from([(String::from("blue"), 6), (String::from("red"), 4), (String::from("green"), 2)]), max_hashmap)
-
+        assert_eq!(
+            HashMap::from([
+                (String::from("blue"), 6),
+                (String::from("red"), 4),
+                (String::from("green"), 2)
+            ]),
+            max_hashmap
+        )
     }
 
     #[test]
     fn compare_game_hashmap_to_rule_hashmap() {
-
         let game_statement = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green";
-        let max_hashmap: HashMap<String, i16> = parse_game_statement_to_max_number_hashmap(&game_statement);
+        let max_hashmap: HashMap<String, i16> =
+            parse_game_statement_to_max_number_hashmap(&game_statement);
 
-        let rule_input = [(String::from("blue"), 5), (String::from("red"), 4), (String::from("green"), 2)];
+        let rule_input = [
+            (String::from("blue"), 5),
+            (String::from("red"), 4),
+            (String::from("green"), 2),
+        ];
         let rule_hashmap: HashMap<String, i16> = HashMap::from(rule_input);
 
         let mut valid_game: bool = true;
 
         for (rule, max_allowed_value) in rule_hashmap.iter() {
-
             if max_hashmap.get_key_value(rule).unwrap().1 > max_allowed_value {
                 valid_game = false;
-                return
-            }
-            else {
+                return;
+            } else {
             }
 
-        assert_eq!(valid_game, false) // game rules state theres 5 blue but game log states 6 blue
-
+            assert_eq!(valid_game, false) // game rules state theres 5 blue but game log states 6 blue
         }
-
     }
-
-
 }
